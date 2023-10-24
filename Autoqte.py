@@ -20,7 +20,6 @@ keyboard_switch=True
 frame_rate=60
 repair_speed=330
 heal_speed=300
-wiggle_speed=230
 shot_delay= 0.006574
 press_and_release_delay= 0.003206
 color_sensitive=125
@@ -177,81 +176,7 @@ def find_square(im_array):
             break
     print(pre_d,post_d)
     
-'''
-    if pre_d + post_d < 5:
-        print('merciless storm')
-        # Image.fromarray(im_array).save(imgdir+'merciless.png')
-        to_be_deleted=[]
-        for i,j in target_points:
-            if abs(i - r_i) <= 20 and abs(j - r_j) <= 20:
-                to_be_deleted.append((i,j))
-        print('before',target_points)
-    
-        for i in to_be_deleted:
-            target_points.remove(i)
-        print('after',target_points)
-        if not target_points:
-            return
-        r2_i,r2_j,max_d= find_thickest_point(shape,target_points)
-        if max_d < 3:
-            target1= cal_degree(r_i-crop_h/2, r_j-crop_w/2)
-            target2= cal_degree(r2_i-crop_h/2, r2_j-crop_w/2)
-            print('storm points',r_i,r_j,r2_i,r2_j)
-            if target1 < target2:
-                pre_white=(r_i,r_j)
-                post_white=(r2_i,r2_j)
-            else:
-                pre_white=(r2_i,r2_j)
-                post_white=(r_i,r_j)
-            new_white=(round((pre_white[0]+post_white[0])/2),round((pre_white[1]+post_white[1])/2))
-            focus_level=0
-            return (new_white,pre_white,post_white)
-    
-    pre_white=(round(r_i-sin*pre_d),round(r_j-cos*pre_d))
-    post_white=(round(r_i+sin*post_d),round(r_j+cos*post_d))
 
-    new_white=(round((pre_white[0]+post_white[0])/2),round((pre_white[1]+post_white[1])/2))
-    if list(im_array[new_white[0]][new_white[1]]) != [0, 0, 255]:
-        print("new white error")
-        return
-    # 
-               
-    return (new_white,pre_white,post_white)
-'''
-'''
-def wiggle(t1,deg1,direction,im1):
-    speed=wiggle_speed*direction
-    target1=270
-    target2=90
-    delta_deg1=(target1-deg1)%(direction*360)
-    delta_deg2=(target2-deg1)%(direction*360)
-    predict_time=min(delta_deg1/speed ,delta_deg2/speed)
-    print("predict time",predict_time)
-    # sleep(0.75)
-    # return #debug 
-    
-    click_time = t1 + predict_time - press_and_release_delay + delay_degree/abs(speed)
-
-    delta_t = click_time-time.time() 
-    
-    # print('delta_t',delta_t)
-    if delta_t < 0 and delta_t > -0.1:
-        keyboard.press_and_release('space')
-        print('quick space!!', delta_t, '\nspeed:', speed)
-        sleep(0.13)
-        return 
-    try:
-        delta_t = click_time-time.time() 
-        sleep(delta_t)
-        keyboard.press_and_release('space')
-        print('space!!', delta_t, '\nspeed:', speed)
-        Image.fromarray(im1).save(imgdir+'log.png')
-        sleep(0.13)
-    except ValueError as e:
-        
-        # winsound.Beep(230,300)
-        print(e,delta_t, deg1, delta_deg1, delta_deg2)
-'''
 def timer(im1, t1):
     global focus_level
     if not toggle:
@@ -293,9 +218,7 @@ def timer(im1, t1):
     
     
     
-    if speed_now==wiggle_speed:
-        print("wiggle")
-        return wiggle(t1,deg1,direction,im1)
+
     if(hyperfocus):
         speed = direction*speed_now*(1+0.04*focus_level)
     else:
@@ -598,11 +521,7 @@ def keyboard_callback(x):
         winsound.Beep(300,500)
         print('change to heal')
         speed_now=heal_speed
-    if x.name=='9':
-        toggle=True
-        winsound.Beep(440,500)
-        print('change to wiggle')
-        speed_now=wiggle_speed
+
     if x.name=='3':
         if hyperfocus:
             winsound.Beep(200,500)
