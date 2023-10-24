@@ -176,6 +176,16 @@ def find_square(im_array):
             break
     print(pre_d,post_d)
     
+    pre_white=(round(r_i-sin*pre_d),round(r_j-cos*pre_d))
+    post_white=(round(r_i+sin*post_d),round(r_j+cos*post_d))
+
+    new_white=(round((pre_white[0]+post_white[0])/2),round((pre_white[1]+post_white[1])/2))
+    if list(im_array[new_white[0]][new_white[1]]) != [0, 0, 255]:
+        print("new white error")
+        return
+    # 
+               
+    return (new_white,pre_white,post_white)
 
 def timer(im1, t1):
     global focus_level
